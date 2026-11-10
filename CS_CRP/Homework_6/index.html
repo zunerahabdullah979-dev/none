@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dewdrop's Rainy Day Garden — Virtual Pet</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Background subtle ambient glow -->
+    <div class="garden-wrapper">
+      <div class="container">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-top-row">
+            <div class="header-badge">🌧️ Gentle Rain in Bloom</div>
+            <!-- Sound Toggle Button (Stage 3 & 4 Audio) -->
+            <button
+              type="button"
+              id="mute-btn"
+              class="mute-btn"
+              aria-label="Toggle sound effects"
+              aria-pressed="false"
+              title="Click to toggle synthesized sound effects"
+            >
+              <span class="mute-icon" id="mute-icon" aria-hidden="true">🔇</span>
+              <span class="mute-text" id="mute-text">Sound: Off</span>
+            </button>
+          </div>
+          <h1 class="pet-title">Dewdrop the Sproutling</h1>
+          <p class="subtitle">A cozy magical garden shelter</p>
+
+          <!-- Stage 5: Life Stage & Evolution Indicators -->
+          <div class="stage-info-bar" id="stage-info-bar" aria-label="Pet life stage and age">
+            <span class="stage-badge" id="stage-badge">🌱 Stage: Baby</span>
+            <span class="stage-age" id="stage-age">⏱️ Age: 0s</span>
+          </div>
+        </header>
+
+        <!-- Pet Habitat Window -->
+        <section class="habitat" aria-label="Garden habitat of Dewdrop">
+          <!-- Animated Rain Layer (fixed bounded elements) -->
+          <div class="rain-container" aria-hidden="true">
+            <span class="raindrop" style="--drop-x: 6%; --drop-delay: 0.1s; --drop-dur: 1.3s; --drop-op: 0.65;"></span>
+            <span class="raindrop" style="--drop-x: 14%; --drop-delay: 0.7s; --drop-dur: 1.1s; --drop-op: 0.8;"></span>
+            <span class="raindrop" style="--drop-x: 23%; --drop-delay: 0.3s; --drop-dur: 1.4s; --drop-op: 0.5;"></span>
+            <span class="raindrop" style="--drop-x: 32%; --drop-delay: 1.0s; --drop-dur: 1.2s; --drop-op: 0.75;"></span>
+            <span class="raindrop" style="--drop-x: 41%; --drop-delay: 0.4s; --drop-dur: 1.5s; --drop-op: 0.6;"></span>
+            <span class="raindrop" style="--drop-x: 52%; --drop-delay: 0.8s; --drop-dur: 1.2s; --drop-op: 0.85;"></span>
+            <span class="raindrop" style="--drop-x: 63%; --drop-delay: 0.2s; --drop-dur: 1.3s; --drop-op: 0.7;"></span>
+            <span class="raindrop" style="--drop-x: 72%; --drop-delay: 1.1s; --drop-dur: 1.4s; --drop-op: 0.55;"></span>
+            <span class="raindrop" style="--drop-x: 81%; --drop-delay: 0.5s; --drop-dur: 1.15s; --drop-op: 0.75;"></span>
+            <span class="raindrop" style="--drop-x: 91%; --drop-delay: 0.9s; --drop-dur: 1.35s; --drop-op: 0.65;"></span>
+            <span class="raindrop" style="--drop-x: 19%; --drop-delay: 1.3s; --drop-dur: 1.25s; --drop-op: 0.7;"></span>
+            <span class="raindrop" style="--drop-x: 48%; --drop-delay: 1.5s; --drop-dur: 1.4s; --drop-op: 0.6;"></span>
+            <span class="raindrop" style="--drop-x: 78%; --drop-delay: 0.15s; --drop-dur: 1.3s; --drop-op: 0.8;"></span>
+          </div>
+
+          <!-- Rain Splash Ripples (bounded bottom habitat effects) -->
+          <div class="splashes-container" aria-hidden="true">
+            <span class="rain-splash" style="--splash-x: 22%; --splash-delay: 0.3s;"></span>
+            <span class="rain-splash" style="--splash-x: 52%; --splash-delay: 0.8s;"></span>
+            <span class="rain-splash" style="--splash-x: 80%; --splash-delay: 0.15s;"></span>
+          </div>
+
+          <!-- Magical Sparkles (fixed bounded elements) -->
+          <div class="sparkles-container" aria-hidden="true">
+            <span class="sparkle sparkle-1" style="--sp-x: 18%; --sp-y: 24%; --sp-delay: 0.2s; --sp-color: var(--pink-orchid);">✦</span>
+            <span class="sparkle sparkle-2" style="--sp-x: 82%; --sp-y: 28%; --sp-delay: 0.9s; --sp-color: var(--celadon);">✧</span>
+            <span class="sparkle sparkle-3" style="--sp-x: 26%; --sp-y: 65%; --sp-delay: 1.4s; --sp-color: var(--sky-surge);">★</span>
+            <span class="sparkle sparkle-4" style="--sp-x: 76%; --sp-y: 68%; --sp-delay: 0.6s; --sp-color: var(--pink-orchid);">✦</span>
+            <span class="sparkle sparkle-5" style="--sp-x: 50%; --sp-y: 16%; --sp-delay: 1.8s; --sp-color: var(--celadon);">✧</span>
+          </div>
+
+          <!-- Sensory Action Feedback Particles (dynamically populated & bounded) -->
+          <div class="action-particles-container" id="action-particles" aria-hidden="true"></div>
+
+          <!-- Interactive Umbrella Control (Placed in garden scenery) -->
+          <button
+            type="button"
+            id="umbrella-btn"
+            class="umbrella-control"
+            aria-label="Toggle garden umbrella"
+            title="Click to open or close the umbrella"
+          >
+            <!-- Open Umbrella SVG -->
+            <svg class="umbrella-svg umbrella-open-svg" viewBox="0 0 70 70" width="60" height="60" aria-hidden="true">
+              <!-- Canopy Segments -->
+              <path d="M 8,36 Q 35,6 62,36 Q 48,32 35,36 Q 22,32 8,36 Z" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="2" />
+              <path d="M 22,32 Q 35,10 48,32 Q 35,36 22,32 Z" fill="var(--celadon)" opacity="0.8" />
+              <!-- Tip -->
+              <circle cx="35" cy="8" r="3" fill="var(--dark-raspberry)" />
+              <!-- Shaft & Handle -->
+              <line x1="35" y1="18" x2="35" y2="52" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+              <path d="M 35,52 Q 35,62 27,62 Q 21,62 21,56" fill="none" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+              <!-- Raindrop ripple shield effect -->
+              <path class="umbrella-shield-glow" d="M 6,36 Q 35,2 64,36" fill="none" stroke="var(--sky-surge)" stroke-width="2" stroke-dasharray="3,3" opacity="0.6" />
+            </svg>
+
+            <!-- Closed Umbrella SVG -->
+            <svg class="umbrella-svg umbrella-closed-svg" viewBox="0 0 70 70" width="60" height="60" aria-hidden="true">
+              <!-- Folded Canopy -->
+              <path d="M 32,14 Q 35,12 38,14 L 39,46 Q 35,48 31,46 Z" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="2" />
+              <!-- Strap -->
+              <rect x="31" y="28" width="8" height="4" rx="2" fill="var(--dark-raspberry)" />
+              <!-- Tip -->
+              <circle cx="35" cy="11" r="2.5" fill="var(--dark-raspberry)" />
+              <!-- Handle -->
+              <line x1="35" y1="46" x2="35" y2="54" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+              <path d="M 35,54 Q 35,62 27,62 Q 21,62 21,56" fill="none" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            <span class="umbrella-tag">Umbrella</span>
+          </button>
+
+          <!-- Interactive Cookie Treat (Placed on a little garden moss plate) -->
+          <button
+            type="button"
+            id="garden-cookie"
+            class="cookie-control"
+            aria-label="Nibble a garden cookie"
+            title="Click to nibble a garden cookie"
+          >
+            <svg viewBox="0 0 48 48" width="42" height="42" aria-hidden="true">
+              <!-- Plate shadow -->
+              <ellipse cx="24" cy="40" rx="20" ry="5" fill="rgba(16, 37, 66, 0.15)" />
+              <!-- Plate -->
+              <ellipse cx="24" cy="38" rx="19" ry="4" fill="var(--celadon)" opacity="0.7" />
+              <!-- Cookie base -->
+              <circle cx="23" cy="24" r="15" fill="#f4caa1" stroke="var(--dark-raspberry)" stroke-width="2" />
+              <!-- Chocolate chips -->
+              <circle cx="17" cy="18" r="2.2" fill="var(--dark-raspberry)" />
+              <circle cx="27" cy="19" r="2.5" fill="var(--dark-raspberry)" />
+              <circle cx="22" cy="26" r="2" fill="var(--dark-raspberry)" />
+              <circle cx="28" cy="29" r="1.8" fill="var(--dark-raspberry)" />
+              <circle cx="16" cy="28" r="2" fill="var(--dark-raspberry)" />
+              <!-- Small crumb -->
+              <circle cx="34" cy="34" r="1.3" fill="var(--dark-raspberry)" />
+            </svg>
+            <span class="cookie-tag">Treat</span>
+          </button>
+
+          <!-- The Pet Character Illustration (Responsive inline SVG with Stage 5 Evolution Visuals) -->
+          <div class="pet-character-wrapper stage-baby" id="pet-character" title="Click to interact with Dewdrop">
+            <!-- Hidden emoji span for backwards-compatibility -->
+            <span class="pet-emoji" id="pet-emoji" style="display: none;">😊</span>
+
+            <svg class="pet-svg" id="pet-svg" viewBox="0 0 160 160" width="140" height="140" aria-label="Dewdrop Pet Character">
+              <!-- Ground Shadow -->
+              <ellipse cx="80" cy="146" rx="46" ry="10" fill="rgba(16, 37, 66, 0.18)" />
+
+              <!-- Sprout Leaves & Evolution Decorations -->
+              <g class="pet-sprout">
+                <!-- Base Leaves -->
+                <path d="M 80,48 Q 62,34 66,16 Q 82,24 80,48 Z" fill="var(--celadon)" stroke="var(--prussian-blue)" stroke-width="2.5" />
+                <path d="M 80,48 Q 98,34 94,16 Q 78,24 80,48 Z" fill="var(--celadon)" stroke="var(--prussian-blue)" stroke-width="2.5" />
+                <!-- Dewdrop on leaf -->
+                <circle cx="70" cy="22" r="2.5" fill="var(--sky-surge)" opacity="0.9" />
+
+                <!-- Stage 5: Teen Bud Evolution (Shows in Teen stage) -->
+                <g class="stage-teen-flower" id="teen-bud">
+                  <circle cx="80" cy="28" r="5.5" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.8" />
+                  <circle cx="80" cy="28" r="2.5" fill="#ffffff" />
+                </g>
+
+                <!-- Stage 5: Adult Blossom Crown (Shows in Adult stage) -->
+                <g class="stage-adult-crown" id="adult-crown">
+                  <!-- Crown Blossom Petals -->
+                  <circle cx="72" cy="16" r="4.5" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.5" />
+                  <circle cx="88" cy="16" r="4.5" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.5" />
+                  <circle cx="80" cy="10" r="5" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.5" />
+                  <circle cx="80" cy="15" r="3" fill="var(--celadon)" stroke="var(--prussian-blue)" stroke-width="1.2" />
+                  <!-- Radiant sparkle crown dot -->
+                  <circle cx="80" cy="15" r="1.5" fill="#ffffff" />
+                </g>
+              </g>
+
+              <!-- Main Pet Body (Soft Pear / Droplet shape) -->
+              <path
+                id="pet-body-shape"
+                d="M 80,42 C 114,42 128,70 128,102 C 128,132 108,144 80,144 C 52,144 32,132 32,102 C 32,70 46,42 80,42 Z"
+                fill="#fdfbf7"
+                stroke="var(--prussian-blue)"
+                stroke-width="3.5"
+              />
+
+              <!-- Soft Belly Patch in Pink Orchid tint -->
+              <ellipse cx="80" cy="114" rx="26" ry="20" fill="var(--pink-orchid)" opacity="0.35" />
+
+              <!-- Cheeks (Blushing pink) -->
+              <ellipse class="pet-cheek" cx="54" cy="102" rx="7" ry="4.5" fill="var(--pink-orchid)" opacity="0.75" />
+              <ellipse class="pet-cheek" cx="106" cy="102" rx="7" ry="4.5" fill="var(--pink-orchid)" opacity="0.75" />
+
+              <!-- Eyes & Expressions (Dynamically controlled via CSS classes on #pet-character) -->
+              <g class="pet-eyes-normal">
+                <!-- Left Eye -->
+                <ellipse cx="63" cy="88" rx="6" ry="7.5" fill="var(--prussian-blue)" />
+                <circle cx="61" cy="85" r="2.5" fill="#ffffff" />
+                <circle cx="65" cy="91" r="1.2" fill="#ffffff" />
+                <!-- Right Eye -->
+                <ellipse cx="97" cy="88" rx="6" ry="7.5" fill="var(--prussian-blue)" />
+                <circle cx="95" cy="85" r="2.5" fill="#ffffff" />
+                <circle cx="99" cy="91" r="1.2" fill="#ffffff" />
+              </g>
+
+              <!-- Happy Arc Eyes (Joyful / Excited) -->
+              <g class="pet-eyes-happy">
+                <path d="M 57,89 Q 63,81 69,89" fill="none" stroke="var(--prussian-blue)" stroke-width="3.5" stroke-linecap="round" />
+                <path d="M 91,89 Q 97,81 103,89" fill="none" stroke="var(--prussian-blue)" stroke-width="3.5" stroke-linecap="round" />
+              </g>
+
+              <!-- Sleepy Drooping Eyes -->
+              <g class="pet-eyes-sleepy">
+                <path d="M 57,86 Q 63,92 69,86" fill="none" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+                <path d="M 91,86 Q 97,92 103,86" fill="none" stroke="var(--prussian-blue)" stroke-width="3" stroke-linecap="round" />
+                <text x="108" y="70" class="zzz-text" fill="var(--sky-surge)">z</text>
+                <text x="116" y="58" class="zzz-text" fill="var(--sky-surge)">Z</text>
+              </g>
+
+              <!-- Sad / Droopy Eyes -->
+              <g class="pet-eyes-sad">
+                <ellipse cx="63" cy="90" rx="5" ry="6" fill="var(--prussian-blue)" />
+                <ellipse cx="97" cy="90" rx="5" ry="6" fill="var(--prussian-blue)" />
+                <!-- Teardrop -->
+                <path d="M 106,94 Q 109,102 106,105 Q 103,102 106,94 Z" fill="var(--sky-surge)" />
+              </g>
+
+              <!-- Game Over / Fainted Dizzy Eyes -->
+              <g class="pet-eyes-dead">
+                <!-- X Eyes -->
+                <path d="M 58,84 L 68,94 M 68,84 L 58,94" stroke="var(--dark-raspberry)" stroke-width="3.5" stroke-linecap="round" />
+                <path d="M 92,84 L 102,94 M 102,84 L 92,94" stroke="var(--dark-raspberry)" stroke-width="3.5" stroke-linecap="round" />
+              </g>
+
+              <!-- Mouth Variants -->
+              <g class="pet-mouth-normal">
+                <path d="M 75,98 Q 80,103 85,98" fill="none" stroke="var(--prussian-blue)" stroke-width="2.5" stroke-linecap="round" />
+              </g>
+              <g class="pet-mouth-happy">
+                <path d="M 73,97 Q 80,107 87,97 Z" fill="var(--dark-raspberry)" stroke="var(--prussian-blue)" stroke-width="2" />
+              </g>
+              <g class="pet-mouth-sad">
+                <path d="M 75,102 Q 80,97 85,102" fill="none" stroke="var(--prussian-blue)" stroke-width="2.5" stroke-linecap="round" />
+              </g>
+              <g class="pet-mouth-dead">
+                <path d="M 74,103 Q 80,99 86,103" fill="none" stroke="var(--dark-raspberry)" stroke-width="2.5" stroke-linecap="round" />
+                <!-- Tongue out -->
+                <path d="M 79,103 Q 82,112 85,103 Z" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.5" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Decorative Mushrooms (Left & Right garden edges) -->
+          <div class="mushrooms-group mushrooms-left" aria-hidden="true">
+            <!-- Big Mushroom Left -->
+            <svg viewBox="0 0 45 45" width="40" height="40" class="mushroom-svg">
+              <path d="M 18,24 Q 22,18 24,42 Q 16,42 18,24 Z" fill="var(--celadon)" opacity="0.9" />
+              <!-- Cap -->
+              <path d="M 4,26 Q 22,6 38,26 Q 22,23 4,26 Z" fill="var(--dark-raspberry)" />
+              <!-- Cap Spots -->
+              <circle cx="16" cy="18" r="3" fill="var(--pink-orchid)" opacity="0.85" />
+              <circle cx="28" cy="20" r="2.2" fill="var(--pink-orchid)" opacity="0.85" />
+              <circle cx="22" cy="13" r="1.8" fill="#ffffff" opacity="0.9" />
+            </svg>
+            <!-- Small Mushroom Left -->
+            <svg viewBox="0 0 32 32" width="26" height="26" class="mushroom-svg mushroom-small">
+              <path d="M 13,18 Q 16,14 17,30 Q 12,30 13,18 Z" fill="#e8f5e9" />
+              <path d="M 5,20 Q 16,7 27,20 Q 16,18 5,20 Z" fill="var(--pink-orchid)" />
+              <circle cx="14" cy="14" r="1.8" fill="var(--dark-raspberry)" opacity="0.7" />
+              <circle cx="20" cy="16" r="1.5" fill="#ffffff" />
+            </svg>
+          </div>
+
+          <div class="mushrooms-group mushrooms-right" aria-hidden="true">
+            <!-- Mushroom Right -->
+            <svg viewBox="0 0 40 40" width="36" height="36" class="mushroom-svg">
+              <path d="M 17,22 Q 20,16 22,38 Q 15,38 17,22 Z" fill="var(--celadon)" opacity="0.95" />
+              <path d="M 6,24 Q 20,8 34,24 Q 20,21 6,24 Z" fill="var(--pink-orchid)" stroke="var(--dark-raspberry)" stroke-width="1.5" />
+              <circle cx="15" cy="17" r="2.5" fill="var(--dark-raspberry)" />
+              <circle cx="25" cy="18" r="2.2" fill="#ffffff" />
+              <circle cx="20" cy="13" r="1.5" fill="var(--dark-raspberry)" />
+            </svg>
+          </div>
+
+          <!-- Lush Ground Foliage -->
+          <div class="garden-ground" aria-hidden="true">
+            <div class="grass-tuft tuft-1"></div>
+            <div class="grass-tuft tuft-2"></div>
+            <div class="grass-tuft tuft-3"></div>
+          </div>
+        </section>
+
+        <!-- Status Cards Grid -->
+        <section class="stats" aria-label="Pet Status Statistics">
+          <!-- Hunger Card -->
+          <div class="stat-card" id="card-hunger">
+            <div class="stat-header">
+              <span class="stat-icon" aria-hidden="true">🍖</span>
+              <span class="stat-label">Hunger</span>
+              <span class="stat-value" id="hunger-value">50</span>
+            </div>
+            <div class="stat-bar-wrap" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+              <div class="stat-bar" id="hunger-bar"></div>
+            </div>
+            <span class="stat-hint">Keep under 100</span>
+          </div>
+
+          <!-- Happiness Card -->
+          <div class="stat-card" id="card-happiness">
+            <div class="stat-header">
+              <span class="stat-icon" aria-hidden="true">🌸</span>
+              <span class="stat-label">Happiness</span>
+              <span class="stat-value" id="happiness-value">50</span>
+            </div>
+            <div class="stat-bar-wrap" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+              <div class="stat-bar" id="happiness-bar"></div>
+            </div>
+            <span class="stat-hint">Keep above 0</span>
+          </div>
+
+          <!-- Energy Card -->
+          <div class="stat-card" id="card-energy">
+            <div class="stat-header">
+              <span class="stat-icon" aria-hidden="true">⚡</span>
+              <span class="stat-label">Energy</span>
+              <span class="stat-value" id="energy-value">50</span>
+            </div>
+            <div class="stat-bar-wrap" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+              <div class="stat-bar" id="energy-bar"></div>
+            </div>
+            <span class="stat-hint">Keep above 0</span>
+          </div>
+        </section>
+
+        <!-- Dynamic Message / Reactions Area (Stage 3 & 4 Message System) -->
+        <div class="message-area" aria-live="polite">
+          <p class="status-message" id="status-message"></p>
+          <p class="garden-reaction fade-in" id="garden-reaction">Welcome to your little rainy-day garden! 🌧️ I'm Dewdrop. Let's make today magical! ✨</p>
+        </div>
+
+        <!-- Action Controls -->
+        <nav class="controls" aria-label="Pet actions">
+          <button id="feed-btn" class="action-btn feed-btn">
+            <span class="btn-icon" aria-hidden="true">🫐</span>
+            <span class="btn-text">Feed</span>
+          </button>
+          <button id="play-btn" class="action-btn play-btn">
+            <span class="btn-icon" aria-hidden="true">🎾</span>
+            <span class="btn-text">Play</span>
+          </button>
+          <button id="sleep-btn" class="action-btn sleep-btn">
+            <span class="btn-icon" aria-hidden="true">🌙</span>
+            <span class="btn-text">Sleep</span>
+          </button>
+          <button id="restart-btn" class="restart-btn" disabled>
+            <span class="btn-icon" aria-hidden="true">🔄</span>
+            <span class="btn-text">Restart</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
