@@ -1,0 +1,1014 @@
+/* ========================================================
+   Virtual Pet — Stage 4 & 5: Sound & Life Stages — style.css
+   Magical Rainy-Day Garden Theme with Evolutionary Growth
+   ======================================================== */
+
+:root {
+  --prussian-blue: #102542;
+  --pink-orchid: #e0acd5;
+  --celadon: #96e6b3;
+  --sky-surge: #06bee1;
+  --dark-raspberry: #7e1946;
+
+  /* Derived soft surface & transparency tokens */
+  --bg-gradient-start: #102542;
+  --bg-gradient-end: #1b385e;
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --card-border: rgba(224, 172, 213, 0.35);
+  --habitat-bg-top: #153358;
+  --habitat-bg-bottom: #244b7a;
+  --shadow-soft: 0 12px 36px rgba(16, 37, 66, 0.22);
+  --shadow-inner: inset 0 2px 6px rgba(16, 37, 66, 0.15);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at 50% 20%, #1d3f6d 0%, var(--prussian-blue) 100%);
+  color: var(--prussian-blue);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0.75rem;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+/* ── Outer wrapper ── */
+.garden-wrapper {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+/* ── Container / Card ── */
+.container {
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--card-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow-soft);
+  padding: 1.6rem 1.45rem 1.45rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 1.15rem;
+}
+
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+  gap: 0.5rem;
+}
+
+.header-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--prussian-blue);
+  background: rgba(150, 230, 179, 0.35);
+  border: 1px solid rgba(150, 230, 179, 0.7);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+
+/* ── Mute Button (Stage 3 & 4 Audio Toggle) ── */
+.mute-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(16, 37, 66, 0.07);
+  border: 1.5px solid rgba(16, 37, 66, 0.18);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--prussian-blue);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: var(--transition-smooth);
+}
+
+.mute-btn:hover {
+  background: rgba(16, 37, 66, 0.14);
+  transform: translateY(-1px);
+}
+
+.mute-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.mute-btn:focus-visible {
+  outline: 2px solid var(--sky-surge);
+  outline-offset: 2px;
+}
+
+.mute-btn.sound-active {
+  background: rgba(6, 190, 225, 0.2);
+  border-color: var(--sky-surge);
+  color: #0c4a6e;
+  box-shadow: 0 2px 8px rgba(6, 190, 225, 0.25);
+}
+
+.pet-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--prussian-blue);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: rgba(16, 37, 66, 0.7);
+  margin-top: 0.25rem;
+}
+
+/* ── Stage 5: Life Stage & Evolution Status Bar ── */
+.stage-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.45rem;
+}
+
+.stage-badge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--prussian-blue);
+  background: rgba(224, 172, 213, 0.3);
+  border: 1px solid rgba(224, 172, 213, 0.65);
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(16, 37, 66, 0.05);
+  transition: var(--transition-smooth);
+}
+
+.stage-age {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #14532d;
+  background: rgba(150, 230, 179, 0.3);
+  border: 1px solid rgba(150, 230, 179, 0.7);
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(16, 37, 66, 0.05);
+}
+
+/* ── Habitat Garden Window ── */
+.habitat {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  background: linear-gradient(180deg, var(--habitat-bg-top) 0%, var(--habitat-bg-bottom) 70%, #1e4538 100%);
+  border-radius: 20px;
+  border: 3px solid rgba(224, 172, 213, 0.45);
+  box-shadow: var(--shadow-inner), 0 8px 24px rgba(16, 37, 66, 0.18);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* ── Animated Rain Effect (Contained within Habitat) ── */
+.rain-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.raindrop {
+  position: absolute;
+  top: -24px;
+  left: var(--drop-x);
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(180deg, transparent, var(--sky-surge));
+  border-radius: 999px;
+  opacity: var(--drop-op, 0.7);
+  animation: rainFall var(--drop-dur, 1.3s) linear infinite;
+  animation-delay: var(--drop-delay, 0s);
+}
+
+@keyframes rainFall {
+  0% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(260px);
+  }
+}
+
+/* ── Rain Splash Ripples (Stage 3 Sensory) ── */
+.splashes-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.rain-splash {
+  position: absolute;
+  bottom: 8px;
+  left: var(--splash-x);
+  width: 14px;
+  height: 5px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sky-surge);
+  opacity: 0;
+  animation: rainSplash 1.6s ease-out infinite;
+  animation-delay: var(--splash-delay, 0s);
+}
+
+@keyframes rainSplash {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* ── Sparkles Effect ── */
+.sparkles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sparkle {
+  position: absolute;
+  left: var(--sp-x);
+  top: var(--sp-y);
+  color: var(--sp-color, var(--celadon));
+  font-size: 14px;
+  opacity: 0.3;
+  animation: sparkleTwinkle 2.8s ease-in-out infinite;
+  animation-delay: var(--sp-delay, 0s);
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    transform: scale(0.6) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.25) rotate(45deg);
+    opacity: 0.95;
+  }
+}
+
+/* ── Action Feedback Particles Container ── */
+.action-particles-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 7;
+}
+
+.action-particle {
+  position: absolute;
+  font-size: 1.25rem;
+  pointer-events: none;
+  animation: particleFloat 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  filter: drop-shadow(0 2px 4px rgba(16, 37, 66, 0.4));
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(-10deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.25) rotate(10deg);
+  }
+  100% {
+    transform: translateY(-44px) scale(0.9) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+/* ── Interactive Umbrella Control ── */
+.umbrella-control {
+  position: absolute;
+  left: 14px;
+  bottom: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(224, 172, 213, 0.4);
+  backdrop-filter: blur(4px);
+  border-radius: 14px;
+  padding: 4px 6px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.umbrella-control:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(6, 190, 225, 0.3);
+}
+
+.umbrella-control:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.umbrella-control:focus-visible {
+  outline: 2px solid var(--sky-surge);
+  outline-offset: 2px;
+}
+
+.umbrella-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(16, 37, 66, 0.9);
+  margin-top: -4px;
+}
+
+.umbrella-control .umbrella-open-svg {
+  display: none;
+}
+.umbrella-control .umbrella-closed-svg {
+  display: block;
+}
+
+.umbrella-control.is-open .umbrella-open-svg {
+  display: block;
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.umbrella-control.is-open .umbrella-closed-svg {
+  display: none;
+}
+
+.umbrella-shield-glow {
+  animation: shieldPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes shieldPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.7) rotate(-8deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ── Interactive Cookie Treat ── */
+.cookie-control {
+  position: absolute;
+  right: 14px;
+  bottom: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(224, 172, 213, 0.4);
+  backdrop-filter: blur(4px);
+  border-radius: 14px;
+  padding: 4px 6px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.cookie-control:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(224, 172, 213, 0.3);
+}
+
+.cookie-control:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.cookie-control:focus-visible {
+  outline: 2px solid var(--pink-orchid);
+  outline-offset: 2px;
+}
+
+.cookie-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(16, 37, 66, 0.9);
+  margin-top: -4px;
+}
+
+.cookie-control.bounce {
+  animation: cookieBounce 0.45s ease-out;
+}
+
+@keyframes cookieBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.25) rotate(-10deg); }
+  65%  { transform: scale(0.92) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ── Pet Character Display & Stage 5 Visual Scaling ── */
+.pet-character-wrapper {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  transform-origin: center bottom;
+}
+
+/* Stage 5 Evolutionary Sprite Sizing */
+.pet-character-wrapper.stage-baby {
+  transform: scale(0.86);
+}
+.pet-character-wrapper.stage-teen {
+  transform: scale(1.0);
+}
+.pet-character-wrapper.stage-adult {
+  transform: scale(1.15);
+}
+
+/* Evolution Stage Decorative Details */
+.stage-teen-flower,
+.stage-adult-crown {
+  display: none;
+}
+
+.pet-character-wrapper.stage-teen .stage-teen-flower {
+  display: block;
+  animation: budSway 2.5s ease-in-out infinite alternate;
+}
+
+.pet-character-wrapper.stage-adult .stage-adult-crown {
+  display: block;
+  animation: crownGlow 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes budSway {
+  0%   { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
+}
+
+@keyframes crownGlow {
+  0%   { filter: drop-shadow(0 0 2px var(--pink-orchid)); }
+  100% { filter: drop-shadow(0 0 6px var(--celadon)); }
+}
+
+/* Evolution Transition Effect */
+.pet-character-wrapper.evolve-pulse {
+  animation: evolveBurst 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes evolveBurst {
+  0% {
+    transform: scale(0.85);
+    filter: drop-shadow(0 0 0px var(--pink-orchid));
+  }
+  40% {
+    transform: scale(1.3) translateY(-8px) rotate(4deg);
+    filter: drop-shadow(0 0 20px var(--celadon)) brightness(1.15);
+  }
+  75% {
+    transform: scale(1.18) rotate(-2deg);
+    filter: drop-shadow(0 0 10px var(--sky-surge));
+  }
+  100% {
+    transform: scale(var(--current-scale, 1)) rotate(0);
+    filter: drop-shadow(0 0 0px transparent);
+  }
+}
+
+.pet-character-wrapper:hover:not(.evolve-pulse) {
+  filter: brightness(1.03);
+}
+
+.pet-svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Swaying sprout leaf */
+.pet-sprout {
+  transform-origin: 80px 48px;
+  animation: sproutSway 3s ease-in-out infinite alternate;
+}
+
+@keyframes sproutSway {
+  0%   { transform: rotate(-4deg); }
+  100% { transform: rotate(4deg); }
+}
+
+/* Gentle breathing idle animation */
+.pet-character-wrapper {
+  animation: gentleBreathe 3.5s ease-in-out infinite;
+}
+
+@keyframes gentleBreathe {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* ── Sensory Reactions for Pet ── */
+
+/* Welcome Greeting Movement */
+.pet-character-wrapper.pet-welcome {
+  animation: petWelcome 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes petWelcome {
+  0%   { transform: scale(0.85) translateY(4px); }
+  35%  { transform: scale(1.05) translateY(-10px) rotate(-4deg); }
+  65%  { transform: scale(0.98) translateY(-2px) rotate(3deg); }
+  100% { transform: scale(var(--current-scale, 0.86)) translateY(0) rotate(0); }
+}
+
+/* Feed Reaction: Happy bounce */
+.pet-character-wrapper.react-bounce {
+  animation: petBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes petBounce {
+  0%   { transform: translateY(0) scale(1); }
+  35%  { transform: translateY(-14px) scale(1.12); }
+  70%  { transform: translateY(2px) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Play Reaction: Joyful excited wiggle */
+.pet-character-wrapper.react-wiggle {
+  animation: petWiggle 0.65s ease-in-out;
+}
+
+@keyframes petWiggle {
+  0%   { transform: translateX(0) rotate(0); }
+  20%  { transform: translateX(-8px) rotate(-8deg) scale(1.06); }
+  40%  { transform: translateX(8px) rotate(8deg) scale(1.06); }
+  60%  { transform: translateX(-5px) rotate(-4deg); }
+  80%  { transform: translateX(5px) rotate(4deg); }
+  100% { transform: translateX(0) rotate(0); }
+}
+
+/* Sleep Reaction: Gentle calming settling */
+.pet-character-wrapper.react-sleep {
+  animation: petSleepSettle 0.8s ease-in-out;
+}
+
+@keyframes petSleepSettle {
+  0%   { transform: scale(1) translateY(0); }
+  50%  { transform: scale(0.96, 0.92) translateY(5px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Invalid / Tired Reaction */
+.pet-character-wrapper.react-tired {
+  animation: petTired 0.5s ease-in-out;
+}
+
+@keyframes petTired {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px) translateY(2px); }
+  75%      { transform: translateX(4px) translateY(2px); }
+}
+
+/* Restart Reaction: Refresh burst */
+.pet-character-wrapper.react-restart {
+  animation: petRestart 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes petRestart {
+  0%   { transform: scale(0.85); opacity: 0.6; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Pet Facial Expressions via CSS Groups */
+.pet-eyes-happy,
+.pet-eyes-sleepy,
+.pet-eyes-sad,
+.pet-eyes-dead,
+.pet-mouth-happy,
+.pet-mouth-sad,
+.pet-mouth-dead {
+  display: none;
+}
+
+.pet-eyes-normal,
+.pet-mouth-normal {
+  display: block;
+}
+
+/* Mood: Happy / Excited */
+.pet-character-wrapper.mood-happy .pet-eyes-normal,
+.pet-character-wrapper.mood-happy .pet-mouth-normal { display: none; }
+.pet-character-wrapper.mood-happy .pet-eyes-happy,
+.pet-character-wrapper.mood-happy .pet-mouth-happy { display: block; }
+
+/* Mood: Sleepy */
+.pet-character-wrapper.mood-sleepy .pet-eyes-normal,
+.pet-character-wrapper.mood-sleepy .pet-mouth-normal { display: none; }
+.pet-character-wrapper.mood-sleepy .pet-eyes-sleepy,
+.pet-character-wrapper.mood-sleepy .pet-mouth-normal { display: block; }
+
+/* Mood: Sad / Hungry */
+.pet-character-wrapper.mood-sad .pet-eyes-normal,
+.pet-character-wrapper.mood-sad .pet-mouth-normal { display: none; }
+.pet-character-wrapper.mood-sad .pet-eyes-sad,
+.pet-character-wrapper.mood-sad .pet-mouth-sad { display: block; }
+
+/* Mood: Game Over / Fainted */
+.pet-character-wrapper.mood-dead {
+  animation: none !important;
+  transform: rotate(12deg) translateY(6px) scale(0.9) !important;
+}
+.pet-character-wrapper.mood-dead .pet-eyes-normal,
+.pet-character-wrapper.mood-dead .pet-mouth-normal { display: none; }
+.pet-character-wrapper.mood-dead .pet-eyes-dead,
+.pet-character-wrapper.mood-dead .pet-mouth-dead { display: block; }
+.pet-character-wrapper.mood-dead #pet-body-shape { fill: #e2e8f0; }
+
+/* ── Garden Scenery: Mushrooms & Ground ── */
+.mushrooms-group {
+  position: absolute;
+  bottom: 8px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.mushrooms-left {
+  left: 70px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.mushrooms-right {
+  right: 68px;
+}
+
+.mushroom-svg {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(16, 37, 66, 0.4));
+}
+
+.garden-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(150, 230, 179, 0.45) 0%, rgba(30, 69, 56, 0.85) 100%);
+  border-top: 2px solid var(--celadon);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.grass-tuft {
+  position: absolute;
+  bottom: 0;
+  width: 14px;
+  height: 10px;
+  border-radius: 50% 50% 0 0;
+  background: var(--celadon);
+}
+.tuft-1 { left: 30%; }
+.tuft-2 { left: 48%; height: 13px; }
+.tuft-3 { left: 68%; }
+
+/* ── Status Cards Grid ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(16, 37, 66, 0.08);
+  border-radius: 14px;
+  padding: 0.65rem 0.5rem;
+  box-shadow: 0 3px 10px rgba(16, 37, 66, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(224, 172, 213, 0.6);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.stat-icon {
+  font-size: 0.95rem;
+}
+
+.stat-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--prussian-blue);
+  flex: 1;
+  text-align: left;
+}
+
+.stat-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--prussian-blue);
+  min-width: 24px;
+  text-align: right;
+}
+
+.stat-hint {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: rgba(16, 37, 66, 0.5);
+  text-align: left;
+}
+
+/* Progress-bar wrapper */
+.stat-bar-wrap {
+  background: rgba(16, 37, 66, 0.08);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Filled bar portion */
+.stat-bar {
+  height: 100%;
+  border-radius: 999px;
+  width: 50%;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+}
+
+/* Color system mapping */
+#hunger-bar    { background: linear-gradient(90deg, #fbd38d, var(--pink-orchid)); }
+#happiness-bar { background: linear-gradient(90deg, var(--celadon), #48bb78); }
+#energy-bar    { background: linear-gradient(90deg, var(--sky-surge), #4299e1); }
+
+/* Critical status alerts: turns Dark Raspberry */
+.stat-bar.critical {
+  background: var(--dark-raspberry) !important;
+  box-shadow: 0 0 6px var(--dark-raspberry);
+}
+
+/* ── Message / Reactions Area (Enhanced) ── */
+.message-area {
+  min-height: 2.7rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.15rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(224, 172, 213, 0.14);
+  border-radius: 12px;
+  border: 1px dashed rgba(224, 172, 213, 0.6);
+  position: relative;
+}
+
+.status-message {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--dark-raspberry);
+  min-height: 1.25rem;
+  transition: opacity 0.25s ease;
+}
+
+.garden-reaction {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--prussian-blue);
+  opacity: 0.9;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.garden-reaction.fade-in {
+  animation: fadeInMsg 0.4s ease-out;
+}
+
+@keyframes fadeInMsg {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+/* ── Controls Grid & Button Sensory Feedback ── */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1.2fr;
+  gap: 0.55rem;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  border-radius: 14px;
+  padding: 0.7rem 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: var(--transition-smooth);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--sky-surge);
+  outline-offset: 2px;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+}
+
+/* Feed Button */
+.feed-btn {
+  background: rgba(224, 172, 213, 0.35);
+  color: var(--dark-raspberry);
+  border: 1.5px solid rgba(126, 25, 70, 0.25);
+}
+
+.feed-btn:hover:not(:disabled) {
+  background: var(--pink-orchid);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(224, 172, 213, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Play Button */
+.play-btn {
+  background: rgba(150, 230, 179, 0.35);
+  color: #14532d;
+  border: 1.5px solid rgba(150, 230, 179, 0.7);
+}
+
+.play-btn:hover:not(:disabled) {
+  background: var(--celadon);
+  color: var(--prussian-blue);
+  box-shadow: 0 4px 12px rgba(150, 230, 179, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Sleep Button */
+.sleep-btn {
+  background: rgba(6, 190, 225, 0.2);
+  color: #0c4a6e;
+  border: 1.5px solid rgba(6, 190, 225, 0.45);
+}
+
+.sleep-btn:hover:not(:disabled) {
+  background: var(--sky-surge);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(6, 190, 225, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Restart Button */
+.restart-btn {
+  background: var(--prussian-blue);
+  color: #ffffff;
+  border: 1.5px solid var(--prussian-blue);
+}
+
+.restart-btn:hover:not(:disabled) {
+  background: #1c3d69;
+  box-shadow: 0 4px 12px rgba(16, 37, 66, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Disabled State — unmistakable visual lock */
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.5);
+}
+
+/* ── Responsive Adjustments ── */
+@media (max-width: 440px) {
+  .container {
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 20px;
+  }
+
+  .pet-title {
+    font-size: 1.4rem;
+  }
+
+  .habitat {
+    height: 200px;
+  }
+
+  .pet-character-wrapper {
+    margin-bottom: 8px;
+  }
+
+  .pet-svg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .stats {
+    gap: 0.45rem;
+  }
+
+  .stat-card {
+    padding: 0.5rem 0.35rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+
+  .controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .restart-btn {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Reduced Motion Accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .raindrop,
+  .rain-splash,
+  .action-particle {
+    animation: none !important;
+    opacity: 0.4;
+  }
+
+  .sparkle {
+    animation: none !important;
+    opacity: 0.5;
+  }
+
+  .pet-sprout,
+  .pet-character-wrapper,
+  .pet-welcome,
+  .react-bounce,
+  .react-wiggle,
+  .react-sleep,
+  .react-tired,
+  .react-restart,
+  .evolve-pulse {
+    animation: none !important;
+    transform: none !important;
+  }
+}
